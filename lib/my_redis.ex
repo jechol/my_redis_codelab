@@ -5,17 +5,21 @@ defmodule MyRedis do
 
   # Returns {:ok, pid}
   def start_link() do
+    Agent.start_link(fn -> %{} end)
   end
 
   # Returns {:ok, value} or :error
   def get(pid, key) do
+    Agent.get(pid, fn map -> map |> Map.fetch(key) end)
   end
 
   # Returns :ok
   def set(pid, key, value) do
+    Agent.update(pid, fn map -> map |> Map.put(key, value) end)
   end
 
   # Returns :ok
   def delete(pid, key) do
+    Agent.update(pid, fn map -> map |> Map.delete(key) end)
   end
 end
